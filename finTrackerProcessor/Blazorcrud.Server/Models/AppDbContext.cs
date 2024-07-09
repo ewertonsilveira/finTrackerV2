@@ -7,12 +7,15 @@ namespace Blazorcrud.Server.Models
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
         }
 
         public DbSet<Person> People => Set<Person>();
         public DbSet<Address> Addresses => Set<Address>();
         public DbSet<Upload> Uploads => Set<Upload>();
         public DbSet<User> Users => Set<User>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Tag> Tags => Set<Tag>();
+        public DbSet<MerchantKeyword> MerchantKeywords => Set<MerchantKeyword>();
+        public DbSet<MerchantKeywordsCategory> MerchantKeywordsCategories => Set<MerchantKeywordsCategory>();
     }
 }

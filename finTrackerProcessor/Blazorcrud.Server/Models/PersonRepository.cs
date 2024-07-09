@@ -22,7 +22,7 @@ namespace Blazorcrud.Server.Models
 
         public async Task<Person?> DeletePerson(int personId)
         {
-            var result = await _appDbContext.People.FirstOrDefaultAsync(p => p.PersonId==personId);
+            var result = await _appDbContext.People.FirstOrDefaultAsync(p => p.Id==personId);
             if (result!=null)
             {
                 _appDbContext.People.Remove(result);
@@ -39,7 +39,7 @@ namespace Blazorcrud.Server.Models
         {
             var result = await _appDbContext.People
                 .Include(p => p.Addresses)
-                .FirstOrDefaultAsync(p => p.PersonId==personId);
+                .FirstOrDefaultAsync(p => p.Id==personId);
             if (result != null)
             {
                 return result;
@@ -59,14 +59,14 @@ namespace Blazorcrud.Server.Models
                 return _appDbContext.People
                     .Where(p => p.FirstName.Contains(name, StringComparison.CurrentCultureIgnoreCase) ||
                         p.LastName.Contains(name, StringComparison.CurrentCultureIgnoreCase))
-                    .OrderBy(p => p.PersonId)
+                    .OrderBy(p => p.Id)
                     .Include(p => p.Addresses)
                     .GetPaged(page, pageSize);
             }
             else
             {
                 return _appDbContext.People
-                    .OrderBy(p => p.PersonId)
+                    .OrderBy(p => p.Id)
                     .Include(p => p.Addresses)
                     .GetPaged(page, pageSize);
             }
@@ -74,7 +74,7 @@ namespace Blazorcrud.Server.Models
 
         public async Task<Person?> UpdatePerson(Person person)
         {
-            var result = await _appDbContext.People.Include("Addresses").FirstOrDefaultAsync(p => p.PersonId==person.PersonId);
+            var result = await _appDbContext.People.Include("Addresses").FirstOrDefaultAsync(p => p.Id==person.Id);
             if (result!=null)
             {
                 // Update existing person
@@ -83,7 +83,7 @@ namespace Blazorcrud.Server.Models
                 // Remove deleted addresses
                 foreach (var existingAddress in result.Addresses.ToList())
                 {
-                   if(!person.Addresses.Any(o => o.AddressId == existingAddress.AddressId))
+                   if(!person.Addresses.Any(o => o.Id == existingAddress.Id))
                      _appDbContext.Addresses.Remove(existingAddress);
                 }
 
@@ -91,7 +91,7 @@ namespace Blazorcrud.Server.Models
                  foreach (var addressModel in person.Addresses)
                  {
                     var existingAddress = result.Addresses
-                        .Where(a => a.AddressId == addressModel.AddressId)
+                        .Where(a => a.Id == addressModel.Id)
                         .SingleOrDefault();
                     if (existingAddress != null)
                         _appDbContext.Entry(existingAddress).CurrentValues.SetValues(addressModel);
@@ -99,7 +99,7 @@ namespace Blazorcrud.Server.Models
                     {
                         var newAddress = new Address
                         {
-                            AddressId = addressModel.AddressId,
+                            Id = addressModel.Id,
                             Street = addressModel.Street,
                             City = addressModel.City,
                             State = addressModel.State,

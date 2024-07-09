@@ -47,8 +47,8 @@ namespace Blazorcrud.Server.Services
 
                 try
                 {
-                    List<Person> people = JsonSerializer.Deserialize<List<Person>>(base64Decoded);
-                    foreach (Person p in people)
+                    var people = JsonSerializer.Deserialize<List<Person>>(base64Decoded);
+                    foreach (var p in people)
                     {
                         _appDbContext.People.Add(p);
                     }

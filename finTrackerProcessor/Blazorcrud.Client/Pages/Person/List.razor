@@ -54,10 +54,10 @@ else
                     <td>@person.Gender</td>
                     <td>@person.PhoneNumber</td>
                     <td style="white-space: nowrap">
-                        <NavLink href="@($"/person/viewperson/{person.PersonId}")" class="oi oi-eye text-primary mr-3 nounderline"></NavLink>
+                        <NavLink href="@($"/person/viewperson/{person.Id}")" class="oi oi-eye text-primary mr-3 nounderline"></NavLink>
                         @if (LoggedIn)
                         {
-                            <NavLink href="@($"/person/updateperson/{person.PersonId}")" class="oi oi-pencil text-warning mr-2 nounderline"></NavLink>
+                            <NavLink href="@($"/person/updateperson/{person.Id}")" class="oi oi-pencil text-warning mr-2 nounderline"></NavLink>
                             
                                 @if (person.IsDeleting) 
                                 {
@@ -141,7 +141,7 @@ else
     {
         var person = _person;
         person.IsDeleting = true;
-        await PersonService.DeletePerson(person.PersonId);
+        await PersonService.DeletePerson(person.Id);
         people = await PersonService.GetPeople(null, Page);
         StateHasChanged();
     }

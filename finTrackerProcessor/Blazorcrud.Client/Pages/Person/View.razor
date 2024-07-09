@@ -10,7 +10,7 @@
     <tbody>
         <tr>
             <th scope="row">Id</th>
-            <td>@person.PersonId</td>
+            <td>@person.Id</td>
         </tr>
         <tr>
             <th scope="row">First Name</th>
@@ -49,7 +49,7 @@
         @foreach (var address in person.Addresses)
         {
             <tr>
-                <td>@address.AddressId</td>
+                <td>@address.Id</td>
                 <td>@address.Street</td>
                 <td>@address.City</td>
                 <td>@address.State</td>

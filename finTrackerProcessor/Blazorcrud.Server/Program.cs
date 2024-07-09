@@ -5,6 +5,7 @@ using Blazorcrud.Server.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using EvolveDb;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite("Filename=./Bla
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IUploadRepository, UploadRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IExcelReader, ExcelReader>();
 builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
 builder.Services.AddSwaggerGen(c =>
@@ -49,18 +52,49 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
 
+    RunDbMigration(services, logger);
+
+    await RunCreateEntities(services, logger);
+}
+
+
+void RunDbMigration(IServiceProvider services, ILogger<Program> logger2)
+{
     try
     {
         var appDbContext = services.GetRequiredService<AppDbContext>();
-        DataGenerator.Initialize(appDbContext);
+        var evolve = new Evolve(appDbContext.Database.GetDbConnection(), msg => logger2.LogInformation(msg))
+        {
+            Locations = new[] { "sql/db/migrations" },
+            IsEraseDisabled = true,
+            OutOfOrder = true
+        };
+
+        evolve.Migrate();
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger2.LogError(ex, "Database migration failed.");
+    }
+}
+
+
+async Task RunCreateEntities(IServiceProvider serviceProvider, ILogger<Program> logger)
+{
+    try
+    {
+        var fileRepository = serviceProvider.GetRequiredService<FileRepository>();
+        var appDbContext = serviceProvider.GetRequiredService<AppDbContext>();
+        await DataGenerator.Initialize(appDbContext, fileRepository);
+    }
+    catch (Exception ex)
+    {
         logger.LogError(ex, "An error occurred creating the DB.");
     }
 }
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

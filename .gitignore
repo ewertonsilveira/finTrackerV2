@@ -24,7 +24,7 @@ target/
 dist/
 
 # JetBrains IDE
-.idea/
+**/*/.idea/
 
 # Unit test reports
 TEST*.xml
@@ -47,7 +47,6 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
 
 
 # Azure configuration files
@@ -188,8 +187,13 @@ DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
 
+**/*/bin
+**/*/obj
+**/bin
+**/obj
+
 # Click-Once directory
-publish/
+**/*/publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml

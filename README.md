@@ -1,10 +1,23 @@
-# dotnet-blazor-crud
+# fin-tracker-v2
 
-# SqlLite
+# Api Server
+## How to run it
+`cd` to `server` folder
+And run the folloing command:
+> vite
+
+# Front-end App
+## How to run it
+`cd` to `app` folder
+And run the folloing command:
+> npm run dev
+
+# Backend Processor & SqlLite
 ## Install
 `cd` to `Blazorcrud.Server` folder
 And run the folloing command:
 > run dotnet add package Microsoft.Data.Sqlite
+
 
 # Features
 
